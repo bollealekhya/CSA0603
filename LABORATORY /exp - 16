@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+#define MAX 100
+
+void gameOfLife(int board[MAX][MAX], int m, int n) {
+    int next[MAX][MAX] = {0};
+
+    // 8 possible directions
+    int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+
+            int liveNeighbors = 0;
+
+            // Count live neighbors
+            for (int k = 0; k < 8; k++) {
+                int r = i + dr[k];
+                int c = j + dc[k];
+
+                if (r >= 0 && r < m && c >= 0 && c < n) {
+                    liveNeighbors += board[r][c];
+                }
+            }
+
+            // Apply Game of Life rules
+            if (board[i][j] == 1) {
+                // Live cell survives with 2 or 3 neighbors
+                if (liveNeighbors == 2 || liveNeighbors == 3)
+                    next[i][j] = 1;
+                else
+                    next[i][j] = 0;
+            } 
+            else {
+                // Dead cell becomes alive with exactly 3 neighbors
+                if (liveNeighbors == 3)
+                    next[i][j] = 1;
+            }
+        }
+    }
+
+    // Copy next generation into original board
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            board[i][j] = next[i][j];
+        }
+    }
+}
+
+int main() {
+    int m, n;
+    int board[MAX][MAX];
+
+    printf("Enter rows and columns: ");
+    scanf("%d %d", &m, &n);
+
+    printf("Enter the board (0 for dead, 1 for live):\n");
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &board[i][j]);
+        }
+    }
+
+    gameOfLife(board, m, n);
+
+    printf("Next generation:\n");
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", board[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
