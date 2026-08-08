@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+int countTuples(int A[], int nA, int B[], int nB,
+                int C[], int nC, int D[], int nD) {
+
+    int count = 0;
+
+    for (int i = 0; i < nA; i++) {
+        for (int j = 0; j < nB; j++) {
+            for (int k = 0; k < nC; k++) {
+                for (int l = 0; l < nD; l++) {
+
+                    if (A[i] + B[j] + C[k] + D[l] == 0) {
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
+int main() {
+
+    // Test Case 1
+    int A1[] = {1, 2};
+    int B1[] = {-2, -1};
+    int C1[] = {-1, 2};
+    int D1[] = {0, 2};
+
+    int result1 = countTuples(
+        A1, 2,
+        B1, 2,
+        C1, 2,
+        D1, 2
+    );
+
+    printf("Test Case 1:\n");
+    printf("Number of tuples = %d\n\n", result1);
+
+
+    // Test Case 2
+    int A2[] = {0};
+    int B2[] = {0};
+    int C2[] = {0};
+    int D2[] = {0};
+
+    int result2 = countTuples(
+        A2, 1,
+        B2, 1,
+        C2, 1,
+        D2, 1
+    );
+
+    printf("Test Case 2:\n");
+    printf("Number of tuples = %d\n", result2);
+
+    return 0;
+}
