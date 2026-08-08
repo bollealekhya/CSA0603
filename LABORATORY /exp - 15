@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char s[1000];
+
+    printf("Enter the string: ");
+    scanf("%s", s);
+
+    int n = strlen(s);
+    int start = 0;
+
+    printf("Large groups: ");
+
+    for (int i = 1; i <= n; i++) {
+
+        // Group ends when character changes
+        if (i == n || s[i] != s[i - 1]) {
+            int end = i - 1;
+
+            // Check if group has 3 or more characters
+            if (end - start + 1 >= 3) {
+                printf("[%d,%d] ", start, end);
+            }
+
+            start = i;
+        }
+    }
+
+    printf("\n");
+
+    return 0;
+}
