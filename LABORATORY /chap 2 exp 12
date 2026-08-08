@@ -1,0 +1,68 @@
+import itertools
+import math
+
+# Function to calculate Euclidean distance
+def distance(city1, city2):
+    x1, y1 = city1
+    x2, y2 = city2
+
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+
+# Exhaustive Search TSP
+def tsp(cities):
+    start = cities[0]
+    other_cities = cities[1:]
+
+    shortest_distance = float('inf')
+    shortest_path = None
+
+    # Generate all possible permutations
+    for permutation in itertools.permutations(other_cities):
+
+        # Start from the first city
+        path = [start] + list(permutation) + [start]
+
+        total_distance = 0
+
+        # Calculate total distance
+        for i in range(len(path) - 1):
+            total_distance += distance(path[i], path[i + 1])
+
+        # Update shortest route
+        if total_distance < shortest_distance:
+            shortest_distance = total_distance
+            shortest_path = path
+
+    return shortest_distance, shortest_path
+
+
+# Test Case 1
+cities1 = [
+    (1, 2),
+    (4, 5),
+    (7, 1),
+    (3, 6)
+]
+
+distance1, path1 = tsp(cities1)
+
+print("Test Case 1:")
+print("Shortest Distance:", distance1)
+print("Shortest Path:", path1)
+
+
+# Test Case 2
+cities2 = [
+    (2, 4),
+    (8, 1),
+    (1, 7),
+    (6, 3),
+    (5, 9)
+]
+
+distance2, path2 = tsp(cities2)
+
+print("\nTest Case 2:")
+print("Shortest Distance:", distance2)
+print("Shortest Path:", path2)
