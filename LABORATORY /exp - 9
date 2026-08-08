@@ -1,0 +1,47 @@
+```cpp
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int binarySearch(int arr[], int n, int key) {
+    int low = 0;
+    int high = n - 1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (arr[mid] == key)
+            return mid;
+
+        if (arr[mid] < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+
+    return -1;
+}
+
+int main() {
+    int arr[] = {3, 4, 6, -9, 10, 8, 9, 30};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    // Sort the array because binary search requires sorted data
+    sort(arr, arr + n);
+
+    int key;
+
+    cout << "Enter key: ";
+    cin >> key;
+
+    int position = binarySearch(arr, n, key);
+
+    if (position != -1)
+        cout << "Element " << key
+             << " is found at position " << position + 1 << endl;
+    else
+        cout << "Element " << key << " is not found" << endl;
+
+    return 0;
+}
+```
