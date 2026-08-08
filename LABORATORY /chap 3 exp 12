@@ -1,0 +1,65 @@
+def median_of_medians(arr, k):
+    # k is 1-based
+    if k < 1 or k > len(arr):
+        return None
+
+    # Base case
+    if len(arr) <= 5:
+        return sorted(arr)[k - 1]
+
+    # Divide array into groups of 5
+    groups = []
+
+    for i in range(0, len(arr), 5):
+        group = arr[i:i + 5]
+        groups.append(sorted(group))
+
+    # Find the median of each group
+    medians = []
+
+    for group in groups:
+        middle = len(group) // 2
+        medians.append(group[middle])
+
+    # Find the median of the medians
+    pivot = median_of_medians(medians, (len(medians) + 1) // 2)
+
+    # Partition the array
+    smaller = [x for x in arr if x < pivot]
+    equal = [x for x in arr if x == pivot]
+    larger = [x for x in arr if x > pivot]
+
+    # Determine which part contains the k-th element
+    if k <= len(smaller):
+        return median_of_medians(smaller, k)
+
+    elif k <= len(smaller) + len(equal):
+        return pivot
+
+    else:
+        new_k = k - len(smaller) - len(equal)
+        return median_of_medians(larger, new_k)
+
+
+# Test Case 1
+arr1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+k1 = 6
+
+result1 = median_of_medians(arr1, k1)
+
+print("Test Case 1:")
+print("Array:", arr1)
+print("k =", k1)
+print("K-th smallest element:", result1)
+
+
+# Test Case 2
+arr2 = [23, 17, 31, 44, 55, 21, 20, 18, 19, 27]
+k2 = 5
+
+result2 = median_of_medians(arr2, k2)
+
+print("\nTest Case 2:")
+print("Array:", arr2)
+print("k =", k2)
+print("K-th smallest element:", result2)
