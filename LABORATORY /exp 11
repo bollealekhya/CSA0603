@@ -1,0 +1,78 @@
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+long long findPaths(int m, int n, int N, int startRow, int startCol) {
+
+    // dp[r][c] = number of ways to reach cell (r,c)
+    vector<vector<long long>> dp(m, vector<long long>(n, 0));
+
+    dp[startRow][startCol] = 1;
+
+    long long answer = 0;
+
+    // Process each step
+    for (int step = 1; step <= N; step++) {
+
+        vector<vector<long long>> next(
+            m, vector<long long>(n, 0)
+        );
+
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+
+                if (dp[r][c] == 0)
+                    continue;
+
+                // Move Up
+                if (r == 0)
+                    answer += dp[r][c];
+                else
+                    next[r - 1][c] += dp[r][c];
+
+                // Move Down
+                if (r == m - 1)
+                    answer += dp[r][c];
+                else
+                    next[r + 1][c] += dp[r][c];
+
+                // Move Left
+                if (c == 0)
+                    answer += dp[r][c];
+                else
+                    next[r][c - 1] += dp[r][c];
+
+                // Move Right
+                if (c == n - 1)
+                    answer += dp[r][c];
+                else
+                    next[r][c + 1] += dp[r][c];
+            }
+        }
+
+        dp = next;
+    }
+
+    return answer;
+}
+
+int main() {
+
+    // Example 1
+    int m1 = 2, n1 = 2, N1 = 2;
+    int i1 = 0, j1 = 0;
+
+    cout << "Example 1 Output: "
+         << findPaths(m1, n1, N1, i1, j1) << endl;
+
+    // Example 2
+    int m2 = 1, n2 = 3, N2 = 3;
+    int i2 = 0, j2 = 1;
+
+    cout << "Example 2 Output: "
+         << findPaths(m2, n2, N2, i2, j2) << endl;
+
+    return 0;
+}
+```
