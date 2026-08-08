@@ -1,0 +1,33 @@
+```cpp
+#include <iostream>
+using namespace std;
+
+int findMaximum(int arr[], int n) {
+    int maximum = arr[0];
+
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > maximum) {
+            maximum = arr[i];
+        }
+    }
+
+    return maximum;
+}
+
+int main() {
+    int arr1[] = {1, 2, 3, 4, 5};
+    int arr2[] = {7, 7, 7, 7, 7};
+    int arr3[] = {-10, 2, 3, -4, 5};
+
+    cout << "Test Case 1 Output: "
+         << findMaximum(arr1, 5) << endl;
+
+    cout << "Test Case 2 Output: "
+         << findMaximum(arr2, 5) << endl;
+
+    cout << "Test Case 3 Output: "
+         << findMaximum(arr3, 5) << endl;
+
+    return 0;
+}
+```
