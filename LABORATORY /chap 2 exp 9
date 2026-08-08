@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <math.h>
+#include <float.h>
+
+struct Point {
+    double x;
+    double y;
+};
+
+// Calculate distance between two points
+double distance(struct Point p1, struct Point p2) {
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+
+    return sqrt(dx * dx + dy * dy);
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of points: ");
+    scanf("%d", &n);
+
+    struct Point points[n];
+
+    printf("Enter the coordinates (x y):\n");
+
+    for (int i = 0; i < n; i++) {
+        scanf("%lf %lf", &points[i].x, &points[i].y);
+    }
+
+    double minDistance = DBL_MAX;
+    int point1 = 0, point2 = 1;
+
+    // Brute force: compare every pair
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+
+            double d = distance(points[i], points[j]);
+
+            if (d < minDistance) {
+                minDistance = d;
+                point1 = i;
+                point2 = j;
+            }
+        }
+    }
+
+    printf("\nClosest pair: (%.0f, %.0f) - (%.0f, %.0f)\n",
+           points[point1].x, points[point1].y,
+           points[point2].x, points[point2].y);
+
+    printf("Minimum distance: %.15lf\n", minDistance);
+
+    return 0;
+}
