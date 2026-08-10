@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+int minContainers(int weights[], int n, int capacity)
+{
+    int containers = 1;
+    int currentWeight = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        // If the item fits in the current container
+        if (currentWeight + weights[i] <= capacity)
+        {
+            currentWeight += weights[i];
+        }
+        else
+        {
+            // Open a new container
+            containers++;
+            currentWeight = weights[i];
+        }
+    }
+
+    return containers;
+}
+
+int main()
+{
+    // Test Case 1
+    int weights1[] = {5, 10, 15, 20, 25, 30, 35};
+    int n1 = 7;
+    int capacity1 = 50;
+
+    printf("Test Case 1:\n");
+    printf("Minimum number of containers = %d\n",
+           minContainers(weights1, n1, capacity1));
+
+    // Test Case 2
+    int weights2[] = {10, 20, 30, 40, 50, 60, 70, 80};
+    int n2 = 8;
+    int capacity2 = 100;
+
+    printf("\nTest Case 2:\n");
+    printf("Minimum number of containers = %d\n",
+           minContainers(weights2, n2, capacity2));
+
+    return 0;
+}
