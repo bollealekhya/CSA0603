@@ -1,0 +1,117 @@
+#include <stdio.h>
+
+#define MAX 100
+#define INF 0.0
+
+typedef struct {
+    int to;
+    double prob;
+} Edge;
+
+Edge graph[MAX][MAX];
+int degree[MAX];
+
+/* Add an undirected edge */
+void addEdge(int u, int v, double prob) {
+    graph[u][degree[u]].to = v;
+    graph[u][degree[u]].prob = prob;
+    degree[u]++;
+
+    graph[v][degree[v]].to = u;
+    graph[v][degree[v]].prob = prob;
+    degree[v]++;
+}
+
+/* Find maximum probability path */
+double maxProbability(int n, int start, int end) {
+
+    double probability[MAX];
+    int visited[MAX] = {0};
+
+    /* Initially probability is 0 */
+    for (int i = 0; i < n; i++)
+        probability[i] = 0.0;
+
+    probability[start] = 1.0;
+
+    for (int count = 0; count < n; count++) {
+
+        int current = -1;
+        double maxProb = -1.0;
+
+        /* Select unvisited node with maximum probability */
+        for (int i = 0; i < n; i++) {
+
+            if (!visited[i] && probability[i] > maxProb) {
+                maxProb = probability[i];
+                current = i;
+            }
+        }
+
+        /* No reachable node */
+        if (current == -1)
+            break;
+
+        /* Destination reached */
+        if (current == end)
+            return probability[current];
+
+        visited[current] = 1;
+
+        /* Relax adjacent edges */
+        for (int i = 0; i < degree[current]; i++) {
+
+            int next = graph[current][i].to;
+            double edgeProb = graph[current][i].prob;
+
+            double newProb =
+                probability[current] * edgeProb;
+
+            if (newProb > probability[next]) {
+                probability[next] = newProb;
+            }
+        }
+    }
+
+    return probability[end];
+}
+
+void resetGraph(int n) {
+
+    for (int i = 0; i < n; i++)
+        degree[i] = 0;
+}
+
+int main() {
+
+    int n = 3;
+
+    /* ================= TEST CASE 1 ================= */
+
+    resetGraph(n);
+
+    addEdge(0, 1, 0.5);
+    addEdge(1, 2, 0.5);
+    addEdge(0, 2, 0.2);
+
+    double answer1 = maxProbability(n, 0, 2);
+
+    printf("Test Case 1:\n");
+    printf("Maximum Probability = %.5f\n", answer1);
+
+
+    /* ================= TEST CASE 2 ================= */
+
+    resetGraph(n);
+
+    addEdge(0, 1, 0.5);
+    addEdge(1, 2, 0.5);
+    addEdge(0, 2, 0.3);
+
+    double answer2 = maxProbability(n, 0, 2);
+
+    printf("\nTest Case 2:\n");
+    printf("Maximum Probability = %.5f\n", answer2);
+
+    return 0;
+}
