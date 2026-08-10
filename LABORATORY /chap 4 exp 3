@@ -1,0 +1,91 @@
+#include <stdio.h>
+
+#define LINES 3
+#define STATIONS 3
+#define INF 999999
+
+int main() {
+    int a[LINES][STATIONS] = {
+        {5, 9, 3},
+        {6, 8, 4},
+        {7, 6, 5}
+    };
+
+    int transfer[LINES][LINES] = {
+        {0, 2, 3},
+        {2, 0, 4},
+        {3, 4, 0}
+    };
+
+    int dp[LINES][STATIONS];
+    int parent[LINES][STATIONS];
+
+    /* First station */
+    for (int line = 0; line < LINES; line++) {
+        dp[line][0] = a[line][0];
+        parent[line][0] = -1;
+    }
+
+    /* Remaining stations */
+    for (int station = 1; station < STATIONS; station++) {
+
+        for (int line = 0; line < LINES; line++) {
+
+            dp[line][station] = INF;
+            parent[line][station] = -1;
+
+            for (int prev = 0; prev < LINES; prev++) {
+
+                int cost = dp[prev][station - 1];
+
+                /* Add transfer cost if changing lines */
+                if (prev != line)
+                    cost += transfer[prev][line];
+
+                cost += a[line][station];
+
+                if (cost < dp[line][station]) {
+                    dp[line][station] = cost;
+                    parent[line][station] = prev;
+                }
+            }
+        }
+    }
+
+    /* Find minimum final cost */
+    int minTime = INF;
+    int lastLine = -1;
+
+    for (int line = 0; line < LINES; line++) {
+        if (dp[line][STATIONS - 1] < minTime) {
+            minTime = dp[line][STATIONS - 1];
+            lastLine = line;
+        }
+    }
+
+    /* Recover optimal line sequence */
+    int path[STATIONS];
+
+    int currentLine = lastLine;
+
+    for (int station = STATIONS - 1; station >= 0; station--) {
+        path[station] = currentLine;
+        currentLine = parent[currentLine][station];
+    }
+
+    printf("Minimum Production Time = %d\n", minTime);
+
+    printf("Optimal Line Selection: ");
+
+    for (int station = 0; station < STATIONS; station++) {
+        printf("Station %d -> Line %d",
+               station + 1, path[station] + 1);
+
+        if (station < STATIONS - 1)
+            printf(" -> ");
+    }
+
+    printf("\n");
+
+    return 0;
+}
