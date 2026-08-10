@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_WORDS 100
+#define MAX_LEN 100
+
+typedef struct {
+    char words[MAX_WORDS][MAX_LEN];
+    int count;
+} WordFilter;
+
+/* Check whether word starts with prefix */
+int hasPrefix(char word[], char pref[]) {
+    int lenWord = strlen(word);
+    int lenPref = strlen(pref);
+
+    if (lenPref > lenWord)
+        return 0;
+
+    return strncmp(word, pref, lenPref) == 0;
+}
+
+/* Check whether word ends with suffix */
+int hasSuffix(char word[], char suff[]) {
+    int lenWord = strlen(word);
+    int lenSuff = strlen(suff);
+
+    if (lenSuff > lenWord)
+        return 0;
+
+    return strcmp(word + lenWord - lenSuff, suff) == 0;
+}
+
+/* Initialize WordFilter */
+void WordFilter_init(WordFilter *wf,
+                     char words[][MAX_LEN],
+                     int n) {
+
+    wf->count = n;
+
+    for (int i = 0; i < n; i++) {
+        strcpy(wf->words[i], words[i]);
+    }
+}
+
+/* Find largest index having prefix and suffix */
+int f(WordFilter *wf, char pref[], char suff[]) {
+
+    /* Search from largest index */
+    for (int i = wf->count - 1; i >= 0; i--) {
+
+        if (hasPrefix(wf->words[i], pref) &&
+            hasSuffix(wf->words[i], suff)) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+
+    WordFilter wf;
+
+    char words[][MAX_LEN] = {
+        "apple"
+    };
+
+    int n = 1;
+
+    WordFilter_init(&wf, words, n);
+
+    printf("f(\"a\", \"e\") = %d\n", f(&wf, "a", "e"));
+
+    return 0;
+}
