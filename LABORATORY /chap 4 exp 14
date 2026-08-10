@@ -1,0 +1,171 @@
+#include <stdio.h>
+
+#define MAX 10
+#define INF 99999
+
+int dist[MAX][MAX];
+int next[MAX][MAX];
+int n;
+
+/* Initialize matrix */
+void initialize(int size) {
+    n = size;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j)
+                dist[i][j] = 0;
+            else
+                dist[i][j] = INF;
+
+            next[i][j] = -1;
+        }
+    }
+}
+
+/* Add a directed edge */
+void addEdge(int u, int v, int weight) {
+    dist[u][v] = weight;
+    next[u][v] = v;
+}
+
+/* Floyd-Warshall Algorithm */
+void floydWarshall() {
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                if (dist[i][k] != INF &&
+                    dist[k][j] != INF &&
+                    dist[i][k] + dist[k][j] < dist[i][j]) {
+
+                    dist[i][j] =
+                        dist[i][k] + dist[k][j];
+
+                    next[i][j] = next[i][k];
+                }
+            }
+        }
+    }
+}
+
+/* Display distance matrix */
+void displayMatrix() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] == INF)
+                printf("%6s", "INF");
+            else
+                printf("%6d", dist[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+/* Print shortest path */
+void printPath(int start, int end) {
+
+    if (next[start][end] == -1) {
+        printf("No path exists.\n");
+        return;
+    }
+
+    int current = start;
+
+    printf("Shortest Path: ");
+
+    printf("%c", 'A' + current);
+
+    while (current != end) {
+        current = next[current][end];
+        printf(" -> %c", 'A' + current);
+    }
+
+    printf("\n");
+}
+
+int main() {
+
+    /* =================================================
+       TEST CASE (a)
+       
+       B -> A = 2
+       A -> C = 3
+       C -> D = 1
+       D -> A = 6
+       C -> B = 7
+       ================================================= */
+
+    printf("========== TEST CASE (a) ==========\n");
+
+    initialize(4);
+
+    /* A=0, B=1, C=2, D=3 */
+
+    addEdge(1, 0, 2);  // B -> A
+    addEdge(0, 2, 3);  // A -> C
+    addEdge(2, 3, 1);  // C -> D
+    addEdge(3, 0, 6);  // D -> A
+    addEdge(2, 1, 7);  // C -> B
+
+    printf("\nDistance Matrix Before Floyd-Warshall:\n");
+    displayMatrix();
+
+    floydWarshall();
+
+    printf("\nDistance Matrix After Floyd-Warshall:\n");
+    displayMatrix();
+
+    printf("\nShortest path from C to A:\n");
+    printPath(2, 0);
+
+    printf("Shortest Distance C -> A = %d\n", dist[2][0]);
+
+
+    /* =================================================
+       TEST CASE (b)
+
+       C -> A = 2
+       A -> B = 4
+       B -> C = 1
+       B -> E = 6
+       E -> A = 1
+       A -> D = 5
+       D -> E = 2
+       E -> D = 4
+       D -> C = 1
+       C -> D = 3
+       ================================================= */
+
+    printf("\n\n========== TEST CASE (b) ==========\n");
+
+    initialize(5);
+
+    /* A=0, B=1, C=2, D=3, E=4 */
+
+    addEdge(2, 0, 2);  // C -> A
+    addEdge(0, 1, 4);  // A -> B
+    addEdge(1, 2, 1);  // B -> C
+    addEdge(1, 4, 6);  // B -> E
+    addEdge(4, 0, 1);  // E -> A
+    addEdge(0, 3, 5);  // A -> D
+    addEdge(3, 4, 2);  // D -> E
+    addEdge(4, 3, 4);  // E -> D
+    addEdge(3, 2, 1);  // D -> C
+    addEdge(2, 3, 3);  // C -> D
+
+    printf("\nDistance Matrix Before Floyd-Warshall:\n");
+    displayMatrix();
+
+    floydWarshall();
+
+    printf("\nDistance Matrix After Floyd-Warshall:\n");
+    displayMatrix();
+
+    printf("\nShortest path from E to C:\n");
+    printPath(4, 2);
+
+    printf("Shortest Distance E -> C = %d\n", dist[4][2]);
+
+    return 0;
+}
