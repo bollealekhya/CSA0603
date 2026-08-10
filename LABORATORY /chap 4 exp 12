@@ -1,0 +1,133 @@
+#include <stdio.h>
+
+#define MAX 10
+#define INF 99999
+
+int dist[MAX][MAX];
+int next[MAX][MAX];
+int n;
+
+/* Print distance matrix */
+void printMatrix() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] == INF)
+                printf("%7s", "INF");
+            else
+                printf("%7d", dist[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+/* Floyd-Warshall Algorithm */
+void floydWarshall() {
+
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                if (dist[i][k] != INF &&
+                    dist[k][j] != INF &&
+                    dist[i][k] + dist[k][j] < dist[i][j]) {
+
+                    dist[i][j] =
+                        dist[i][k] + dist[k][j];
+
+                    next[i][j] = next[i][k];
+                }
+            }
+        }
+    }
+}
+
+/* Print shortest path */
+void printPath(int start, int end) {
+
+    if (next[start][end] == -1) {
+        printf("No path exists.\n");
+        return;
+    }
+
+    printf("Shortest Path: ");
+
+    int current = start;
+    printf("City %d", current + 1);
+
+    while (current != end) {
+        current = next[current][end];
+        printf(" -> City %d", current + 1);
+    }
+
+    printf("\n");
+}
+
+/* Initialize graph */
+void initialize() {
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+
+            if (i == j)
+                dist[i][j] = 0;
+            else
+                dist[i][j] = INF;
+
+            next[i][j] = -1;
+        }
+    }
+}
+
+/* Add directed edge */
+void addEdge(int u, int v, int weight) {
+
+    dist[u][v] = weight;
+    next[u][v] = v;
+}
+
+int main() {
+
+    /*
+     * Test Case (a)
+     *
+     * City 1 -> City 2 = 3
+     * City 1 -> City 3 = 8
+     * City 1 -> City 4 = -4
+     * City 2 -> City 4 = 1
+     * City 2 -> City 3 = 4
+     * City 3 -> City 1 = 2
+     * City 4 -> City 3 = -5
+     * City 4 -> City 2 = 6
+     */
+
+    n = 4;
+
+    initialize();
+
+    addEdge(0, 1, 3);
+    addEdge(0, 2, 8);
+    addEdge(0, 3, -4);
+
+    addEdge(1, 3, 1);
+    addEdge(1, 2, 4);
+
+    addEdge(2, 0, 2);
+
+    addEdge(3, 2, -5);
+    addEdge(3, 1, 6);
+
+    printf("DISTANCE MATRIX BEFORE FLOYD-WARSHALL:\n");
+    printMatrix();
+
+    floydWarshall();
+
+    printf("\nDISTANCE MATRIX AFTER FLOYD-WARSHALL:\n");
+    printMatrix();
+
+    printf("\nShortest distance from City 1 to City 3 = %d\n",
+           dist[0][2]);
+
+    printPath(0, 2);
+
+    return 0;
+}
