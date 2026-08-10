@@ -1,0 +1,113 @@
+#include <stdio.h>
+
+#define INF 999999
+
+void dijkstra(int graph[][5], int n, int source)
+{
+    int distance[5];
+    int visited[5];
+
+    /* Initialize distances and visited array */
+    for (int i = 0; i < n; i++)
+    {
+        distance[i] = graph[source][i];
+        visited[i] = 0;
+    }
+
+    distance[source] = 0;
+
+    /* Find shortest paths */
+    for (int count = 0; count < n - 1; count++)
+    {
+        int min = INF;
+        int u = -1;
+
+        /* Find unvisited vertex with minimum distance */
+        for (int i = 0; i < n; i++)
+        {
+            if (!visited[i] && distance[i] < min)
+            {
+                min = distance[i];
+                u = i;
+            }
+        }
+
+        if (u == -1)
+            break;
+
+        visited[u] = 1;
+
+        /* Update distances of adjacent vertices */
+        for (int v = 0; v < n; v++)
+        {
+            if (!visited[v] &&
+                graph[u][v] != INF &&
+                distance[u] + graph[u][v] < distance[v])
+            {
+                distance[v] = distance[u] + graph[u][v];
+            }
+        }
+    }
+
+    /* Print shortest distances */
+    printf("Shortest distances from source %d:\n", source);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (distance[i] == INF)
+            printf("Vertex %d = INF\n", i);
+        else
+            printf("Vertex %d = %d\n", i, distance[i]);
+    }
+
+    printf("Distance array: [");
+
+    for (int i = 0; i < n; i++)
+    {
+        if (i > 0)
+            printf(", ");
+
+        if (distance[i] == INF)
+            printf("INF");
+        else
+            printf("%d", distance[i]);
+    }
+
+    printf("]\n");
+}
+
+int main()
+{
+    /* ================= TEST CASE 1 ================= */
+
+    int graph1[5][5] =
+    {
+        {0, 10, 3, INF, INF},
+        {INF, 0, 1, 2, INF},
+        {INF, 4, 0, 8, 2},
+        {INF, INF, INF, 0, 7},
+        {INF, INF, INF, 9, 0}
+    };
+
+    printf("Test Case 1:\n");
+
+    dijkstra(graph1, 5, 0);
+
+
+    /* ================= TEST CASE 2 ================= */
+
+    int graph2[5][5] =
+    {
+        {0, 5, INF, 10, INF},
+        {INF, 0, 3, INF, INF},
+        {INF, INF, 0, 1, INF},
+        {INF, INF, INF, 0, INF},
+        {INF, INF, INF, INF, 0}
+    };
+
+    printf("\nTest Case 2:\n");
+
+    dijkstra(graph2, 4, 0);
+
+    return 0;
+}
