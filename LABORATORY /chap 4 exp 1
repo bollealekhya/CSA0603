@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+long long diceThrow(int num_dice, int num_sides, int target) {
+    long long dp[num_dice + 1][target + 1];
+
+    // Initialize all values to 0
+    for (int i = 0; i <= num_dice; i++) {
+        for (int j = 0; j <= target; j++) {
+            dp[i][j] = 0;
+        }
+    }
+
+    // Base case: 0 dice can make sum 0 in exactly 1 way
+    dp[0][0] = 1;
+
+    // Fill the DP table
+    for (int dice = 1; dice <= num_dice; dice++) {
+        for (int sum = 1; sum <= target; sum++) {
+            for (int face = 1; face <= num_sides; face++) {
+                if (sum >= face) {
+                    dp[dice][sum] += dp[dice - 1][sum - face];
+                }
+            }
+        }
+    }
+
+    return dp[num_dice][target];
+}
+
+int main() {
+    int num_sides, num_dice, target;
+
+    // Test Case 1
+    num_sides = 6;
+    num_dice = 2;
+    target = 7;
+
+    printf("Test Case 1:\n");
+    printf("Number of ways to reach sum %d: %lld\n",
+           target, diceThrow(num_dice, num_sides, target));
+
+    // Test Case 2
+    num_sides = 4;
+    num_dice = 3;
+    target = 10;
+
+    printf("\nTest Case 2:\n");
+    printf("Number of ways to reach sum %d: %lld\n",
+           target, diceThrow(num_dice, num_sides, target));
+
+    return 0;
+}
