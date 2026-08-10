@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_LEN 1000
+#define MAX_WORDS 100
+#define MAX_WORD_LEN 100
+
+bool wordBreak(char s[], char wordDict[][MAX_WORD_LEN], int wordCount) {
+    int n = strlen(s);
+
+    bool dp[MAX_LEN + 1] = {false};
+
+    // Empty string can always be segmented
+    dp[0] = true;
+
+    for (int i = 1; i <= n; i++) {
+
+        for (int j = 0; j < wordCount; j++) {
+
+            int wordLen = strlen(wordDict[j]);
+
+            if (wordLen <= i && dp[i - wordLen]) {
+
+                bool match = true;
+
+                // Compare substring with dictionary word
+                for (int k = 0; k < wordLen; k++) {
+                    if (s[i - wordLen + k] != wordDict[j][k]) {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return dp[n];
+}
+
+int main() {
+
+    char s[MAX_LEN];
+    int wordCount;
+
+    printf("Enter string: ");
+    scanf("%s", s);
+
+    printf("Enter number of dictionary words: ");
+    scanf("%d", &wordCount);
+
+    char wordDict[MAX_WORDS][MAX_WORD_LEN];
+
+    printf("Enter dictionary words:\n");
+
+    for (int i = 0; i < wordCount; i++) {
+        scanf("%s", wordDict[i]);
+    }
+
+    if (wordBreak(s, wordDict, wordCount))
+        printf("Output: true\n");
+    else
+        printf("Output: false\n");
+
+    return 0;
+}
